@@ -25,4 +25,5 @@ Projection, KITTI, Calibration
 
 ## [5] Application1 - Projecting Plane Only
 
-<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518146-1f7d2df1-44c8-43c3-91d9-ad15c5aa60dd.png">
+<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518284-74f9df93-7d24-494b-807d-ac888bdaf435.png">
+
