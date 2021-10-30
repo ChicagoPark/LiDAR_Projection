@@ -1,4 +1,4 @@
-# 이미지, 포인트 클라우드 출력 소스 필요합니다
+# 준비물 포인트 클라우드 출력 소스 필요합니다
 # LiDAR_Projection
 Projection, KITTI, Calibration
 
@@ -13,7 +13,7 @@ Projection, KITTI, Calibration
 
 ## [3] Prepare Image and Point Cloud
 
-<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518188-90cefa9d-3d01-43c3-a66f-3e3be9477d4a.png">
+<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518265-a099659a-ad4a-48e3-b690-1d33c752ce80.png">
 
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518190-ade8a3d0-a4f9-4808-b506-2f4834f19a01.png">
 
