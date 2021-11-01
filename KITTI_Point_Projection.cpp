@@ -1,6 +1,6 @@
 /*
 Define Necessary Modules
-/*
+*/
 
 #include <iostream>
 #include <string>
@@ -30,8 +30,7 @@ using namespace std;
 
 /*
 Define Output Image Size
-/*
-
+*/
 cv::Mat img(720,1280,CV_8UC3, cv::Scalar(255,255,255));
 
 
@@ -48,18 +47,15 @@ int main(int argc, char** argv)
   ros::Publisher pub2 = nh.advertise<PointCloud> ("points_obstacle", 1);
   ros::Publisher pub3 = nh.advertise<sensor_msgs::Image> ("projected_obstacle", 1);
   ros::Publisher pub4 = nh.advertise<sensor_msgs::Image> ("projected_plane", 1);
-
-  ros::Publisher marker_pub_left = nh.advertise<visualization_msgs::Marker>("visualization_marker_left", 10);
-  ros::Publisher marker_pub_right = nh.advertise<visualization_msgs::Marker>("visualization_marker_right", 10);
-
-  //ros::Publisher pub1 = nh.advertise<sensor_msgs::ImagePtr> ("image", 1);
-  //pcl::io::loadPCDFile<pcl::PointXYZI> ("/home/kaai/chicago_ws/src/first_pkg/src/Kitti_File/pcd/1039.pcd", *cloud);
+  
+  
   pcl::io::loadPCDFile<pcl::PointXYZI> ("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/pcd/1313.pcd", *cloud);
-
+  Mat color_img = imread("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/png/001313.png",IMREAD_COLOR);
+  
   //000021.png  2090899988.pcd
 
   //베스트 : 000030.png  2101599309.pcd
-  //RANSAC Section
+  //RANSAC Section for segmentation
   pcl::SACSegmentation<pcl::PointXYZI> seg;
   pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
   pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
@@ -90,31 +86,13 @@ int main(int argc, char** argv)
   sensor_msgs::PointCloud2 ROS_cloud_o;
   sensor_msgs::PointCloud2 ROS_cloud_p;
 
-/*
-  //toPCL을 하여 fromPCL을 사용하기위한 선언
-  pcl::PCLPointCloud2 * PCL_cloud_o(new pcl::PCLPointCloud2);
-  pcl::PCLPointCloud2 * PCL_cloud_p(new pcl::PCLPointCloud2);
-
-  pcl::toPCLPointCloud2(*PCD_cloud_o, *PCL_cloud_o);
-  pcl::toPCLPointCloud2(*PCD_cloud_p, *PCL_cloud_p);
-  pcl_conversions::fromPCL(*PCL_cloud_o, ROS_cloud_o);
-  pcl_conversions::fromPCL(*PCL_cloud_p, ROS_cloud_p);
-*/
   pcl::toROSMsg(*PCD_cloud_o, ROS_cloud_o);
   pcl::toROSMsg(*PCD_cloud_p, ROS_cloud_p);
   
   ROS_cloud_o.header.frame_id = "livox_frame";
   ROS_cloud_p.header.frame_id = "livox_frame";
 
-
-
-
-  //img=cv::imread("/home/kaai/chicago_ws/src/first_pkg/src/Kitti_File/001013.png");
-
-  //sensor_msgs::ImagePtr msg1 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", img).toImageMsg();
-
-  //Mat color_img = imread("/home/kaai/chicago_ws/src/first_pkg/src/Kitti_File/image/001039.png",IMREAD_COLOR);
-  Mat color_img = imread("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/png/001313.png",IMREAD_COLOR);
+  
 
   
 
@@ -183,7 +161,6 @@ int main(int argc, char** argv)
     // [put the point on Image]
     cv::circle(overlay_o, pt_o, 1., cv::Scalar(it->intensity , red,green), -1);
     }
-  
     }
   
   
