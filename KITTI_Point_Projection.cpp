@@ -1,5 +1,9 @@
-# include <iostream>
-# include <string>
+/*
+Define Necessary Modules
+/*
+
+#include <iostream>
+#include <string>
 #include <math.h>
 
 #include <ros/ros.h>
@@ -20,17 +24,13 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/filters/extract_indices.h>
 
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
-
 using namespace cv;
 typedef pcl::PointCloud<pcl::PointXYZI> PointCloud;
 using namespace std;
 
 /*
-projection material
-https://github.com/azureology/kitti-velo2cam/blob/master/proj_velo2cam.py
-*/
+Define Output Image Size
+/*
 
 cv::Mat img(720,1280,CV_8UC3, cv::Scalar(255,255,255));
 
