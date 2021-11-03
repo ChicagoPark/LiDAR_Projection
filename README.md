@@ -1,4 +1,12 @@
-# 준비물 포인트 클라우드 출력 소스 필요합니다
+# Github 정리 준비물
+
+## 1. 포인트 클라우드 출력 소스
+## 2. Projection 만 포함이 된 코드
+## 3. Segmentation 이 포함이 된 코드
+
+# `--------------------------------------------`
+
+
 # LiDAR_Projection
 Projection, KITTI, Calibration
 
