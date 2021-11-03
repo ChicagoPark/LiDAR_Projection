@@ -4,12 +4,12 @@ Projection, KITTI, Calibration
 
 ## [1] Used Matrixes
 
-<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518079-526e31de-1f46-4a2d-9c68-a303a9aa96aa.jpeg">
+<img width="300" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518079-526e31de-1f46-4a2d-9c68-a303a9aa96aa.jpeg">
 
 
 ## [2] Projection Operation
 
-<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518080-93cd81a7-ae9c-4da7-a421-a166153c1d6c.jpeg">
+<img width="300" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518080-93cd81a7-ae9c-4da7-a421-a166153c1d6c.jpeg">
 
 ## [3] Prepare Image and Point Cloud
 
