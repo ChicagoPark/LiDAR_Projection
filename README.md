@@ -25,6 +25,8 @@ Projection, KITTI, Calibration
 
 ## [5] Application1
 
+`Detail about Point Cloud Processing is in "https://github.com/ChicagoPark/Basic_LiDAR_Process"`
+
 ### [5-1] Projecting Plane Only
 
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518284-74f9df93-7d24-494b-807d-ac888bdaf435.png">
