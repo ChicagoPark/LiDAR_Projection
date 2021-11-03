@@ -40,61 +40,19 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
   double x_cloud; double y_cloud; double z_cloud;
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
-  pcl::PointCloud<pcl::PointXYZI>::Ptr PCD_cloud_o(new pcl::PointCloud<pcl::PointXYZI>);
-  pcl::PointCloud<pcl::PointXYZI>::Ptr PCD_cloud_p(new pcl::PointCloud<pcl::PointXYZI>);
+  pcl::PointCloud<pcl::PointXYZI>::Ptr PCD_cloud(new pcl::PointCloud<pcl::PointXYZI>);
   
-  ros::Publisher pub1 = nh.advertise<PointCloud> ("points_plane", 1);
-  ros::Publisher pub2 = nh.advertise<PointCloud> ("points_obstacle", 1);
-  ros::Publisher pub3 = nh.advertise<sensor_msgs::Image> ("projected_obstacle", 1);
-  ros::Publisher pub4 = nh.advertise<sensor_msgs::Image> ("projected_plane", 1);
-  
+  ros::Publisher pub1 = nh.advertise<PointCloud> ("point_cloud", 1);
+  ros::Publisher pub2 = nh.advertise<sensor_msgs::Image> ("projected_image", 1);
   
   pcl::io::loadPCDFile<pcl::PointXYZI> ("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/pcd/1313.pcd", *cloud);
   Mat color_img = imread("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/png/001313.png",IMREAD_COLOR);
   
-  //000021.png  2090899988.pcd
+  sensor_msgs::PointCloud2 ROS_cloud;
 
-  //베스트 : 000030.png  2101599309.pcd
-  //RANSAC Section for segmentation
-  pcl::SACSegmentation<pcl::PointXYZI> seg;
-  pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-  pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
-  seg.setOptimizeCoefficients(true);
-  seg.setModelType(pcl::SACMODEL_PLANE);
-  seg.setMethodType(pcl::SAC_RANSAC);
-  seg.setMaxIterations(100);
-  seg.setDistanceThreshold(0.3);
-  seg.setInputCloud(cloud);
-  seg.segment(*inliers, *coefficients);
-
-  if(inliers->indices.size() == 0)            // 0일때, 우리는 우리 데이터에 적합한 모델을 찾지 못했다는 것을 의미한다.
-  {
-      std::cout << "Could not estimate a planar model for the given dataset." << std::endl;
-  }
-
-  for(int index : inliers->indices)       //inliers가 가지는 모든 인덱스 값에 해당하는 cloud값을 planeCloud에 넣어준다.
-  {
-      PCD_cloud_p->points.push_back(cloud->points[index]);
-  }
-
-  pcl::ExtractIndices<pcl::PointXYZI> extract;
-  extract.setInputCloud(cloud);       //이 reference cloud 에서 inliers에 해당하는 모든 포인트가 사라져서 obstCloud 만 남게된다.
-  extract.setIndices(inliers);
-  extract.setNegative(true);
-  extract.filter(*PCD_cloud_o);
-
-  sensor_msgs::PointCloud2 ROS_cloud_o;
-  sensor_msgs::PointCloud2 ROS_cloud_p;
-
-  pcl::toROSMsg(*PCD_cloud_o, ROS_cloud_o);
-  pcl::toROSMsg(*PCD_cloud_p, ROS_cloud_p);
+  pcl::toROSMsg(*PCD_cloud, ROS_cloud);
   
-  ROS_cloud_o.header.frame_id = "livox_frame";
-  ROS_cloud_p.header.frame_id = "livox_frame";
-
-  
-
-  
+  ROS_cloud.header.frame_id = "livox_frame";
 
   cv::Mat p(3,4,cv::DataType<double>::type);
   cv::Mat r(3,3,cv::DataType<double>::type);
@@ -123,68 +81,50 @@ int main(int argc, char** argv)
   cv::Mat Y(3,1,cv::DataType<double>::type);
   cv::Mat Z(4,1,cv::DataType<double>::type);
   cv::Mat F(3,1,cv::DataType<double>::type);
-  cv::Mat visImg_p = color_img.clone();
-  cv::Mat visImg_o = color_img.clone();
-  cv::Mat overlay_p = visImg_p.clone();
-  cv::Mat overlay_o = visImg_o.clone();
+
+  cv::Mat visImg = color_img.clone();
+  cv::Mat overlay = visImg.clone();
 
   cv::Point *pt_Object = new cv::Point;
   cv::Point *pt_Lane = new cv::Point;
-  cv::Point pt_o;
-  cv::Point pt_l;
-  float object_lidar_array[3]; // for getting 3D points for object
-  float lane_lidar_array[3];   // for getting 3D points for lane
+  cv::Point pt;
 
  
   // [access point on everything] ------------------------------------------
-  for(auto it=PCD_cloud_p->begin(); it!=PCD_cloud_p->end(); ++it) {
-    if(it->x >=0){
+  for(auto it=PCD_cloud->begin(); it!=PCD_cloud->end(); ++it)
+  {
+    if(it->x >=0)
+    {
+      X.at<double>(0,0) = it->x; X.at<double>(1,0) = it->y; X.at<double>(2,0) = it->z; X.at<double>(3,0) = 1;
+      Y = r * tr * X;
+      Z.at<double>(0,0) = Y.at<double>(0,0); Z.at<double>(1,0) = Y.at<double>(1,0); Z.at<double>(2,0) = Y.at<double>(2,0); Z.at<double>(3,0) = 1;
+      F = p * Z;
 
-    X.at<double>(0,0) = it->x; X.at<double>(1,0) = it->y; X.at<double>(2,0) = it->z; X.at<double>(3,0) = 1;
-    Y = r * tr * X;
-    Z.at<double>(0,0) = Y.at<double>(0,0); Z.at<double>(1,0) = Y.at<double>(1,0); Z.at<double>(2,0) = Y.at<double>(2,0); Z.at<double>(3,0) = 1;
-    F = p * Z;
-    
-    pt_o.x = F.at<double>(0,0) / F.at<double>(0,2);
-    pt_o.y = F.at<double>(1,0) / F.at<double>(0,2);
-    //std::cout << it->z <<std::endl;
+      pt.x = F.at<double>(0,0) / F.at<double>(0,2);
+      pt.y = F.at<double>(1,0) / F.at<double>(0,2);
+      
+      float val = it->x;
+      float intensity = it-> intensity;
 
-    float val = it->x;
-    float intensity = it-> intensity;
-    //ROS_INFO("intensity : %f", intensity);
-    
-    float maxval = 10;
-    int green = std::min(255, (int)(255*abs((val - maxval)/maxval)));
-    //std::cout<<red<<std::endl;
-    int red = std::min(255, (int)(255*(1-abs((val - maxval)/maxval))));
+      float maxval = 10;
+      int green = std::min(255, (int)(255*abs((val - maxval)/maxval)));
+      //std::cout<<red<<std::endl;
+      int red = std::min(255, (int)(255*(1-abs((val - maxval)/maxval))));
 
-    // [put the point on Image]
-    cv::circle(overlay_o, pt_o, 1., cv::Scalar(it->intensity , red,green), -1);
+      // [put the point on Image]
+      cv::circle(overlay, pt, 1., cv::Scalar(it->intensity , red,green), -1);
     }
-    }
-  
-  
+  }
   float opacity = 0.7;
-  cv::addWeighted(overlay_p, opacity, visImg_p, 1-opacity, 0, visImg_p);
-  cv::addWeighted(overlay_o, opacity, visImg_o, 1-opacity, 0, visImg_o);
-
-  float distance = fabs(object_lidar_array[1] - lane_lidar_array[1]);
-  
+  cv::addWeighted(overlay, opacity, visImg, 1-opacity, 0, visImg);
   ros::Rate loop_rate(4);
-
-  sensor_msgs::ImagePtr img_msg_obs = cv_bridge::CvImage(std_msgs::Header(), "bgr8", visImg_o).toImageMsg();
-  sensor_msgs::ImagePtr img_msg_plane = cv_bridge::CvImage(std_msgs::Header(), "bgr8", visImg_p).toImageMsg();
+  sensor_msgs::ImagePtr img_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", visImg).toImageMsg();
 
   
   while (nh.ok())
   {
-    pub1.publish (ROS_cloud_p);
-    pub2.publish (ROS_cloud_o);
-    pub3.publish(img_msg_obs);
-    pub4.publish(img_msg_plane);
-
-    //pub1.publish(msg);
-
+    pub1.publish(ROS_cloud);
+    pub2.publish(img_msg);
     ros::spinOnce ();
     loop_rate.sleep ();
   }
