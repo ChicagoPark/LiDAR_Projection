@@ -23,9 +23,16 @@ Projection, KITTI, Calibration
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518141-93113b45-b43b-48dc-bada-e3362dd8227f.png">
 
 
-## [5] Application1 - Projecting Plane Only
+## [5] Application1
+
+### [5-1] Projecting Plane Only
 
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518284-74f9df93-7d24-494b-807d-ac888bdaf435.png">
+
+## [5-2] Projecting Obstacle and Plane respectively
+
+<img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/140100572-62086061-f06b-471d-9e1d-d13568837e39.jpeg">
+
 
 
 ### `Further Research with projection is in other repositories`
