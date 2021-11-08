@@ -16,7 +16,7 @@ Define Necessary Modules
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui.hpp>
 
-#include <image_transport/image_transport.h>
+//#include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
 
@@ -36,17 +36,16 @@ cv::Mat img(720,1280,CV_8UC3, cv::Scalar(255,255,255));
 
 int main(int argc, char** argv)
 {
-  ros::init (argc, argv, "my_pcl_tutorial");
+  ros::init (argc, argv, "projection");
   ros::NodeHandle nh;
   double x_cloud; double y_cloud; double z_cloud;
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
-  pcl::PointCloud<pcl::PointXYZI>::Ptr PCD_cloud(new pcl::PointCloud<pcl::PointXYZI>);
   
   ros::Publisher pub1 = nh.advertise<PointCloud> ("point_cloud", 1);
   ros::Publisher pub2 = nh.advertise<sensor_msgs::Image> ("projected_image", 1);
   
-  pcl::io::loadPCDFile<pcl::PointXYZI> ("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/pcd/1313.pcd", *cloud);
-  Mat color_img = imread("/home/kaai/chicago_ws/src/first_pkg/src/KITTI_cali_application/png/001313.png",IMREAD_COLOR);
+  pcl::io::loadPCDFile<pcl::PointXYZI> ("/home/kaai/chicago_ws/src/first_pkg/src/KITTI/pcd/0000000192.pcd", *cloud);
+  Mat color_img = imread("/home/kaai/chicago_ws/src/first_pkg/src/KITTI/image/0000000192.png",IMREAD_COLOR);
   
   sensor_msgs::PointCloud2 ROS_cloud;
 
@@ -85,13 +84,11 @@ int main(int argc, char** argv)
   cv::Mat visImg = color_img.clone();
   cv::Mat overlay = visImg.clone();
 
-  cv::Point *pt_Object = new cv::Point;
-  cv::Point *pt_Lane = new cv::Point;
   cv::Point pt;
 
  
   // [access point on everything] ------------------------------------------
-  for(auto it=PCD_cloud->begin(); it!=PCD_cloud->end(); ++it)
+  for(auto it=cloud->begin(); it!=cloud->end(); ++it)
   {
     if(it->x >=0)
     {
