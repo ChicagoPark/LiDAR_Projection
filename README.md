@@ -17,9 +17,9 @@ Projection, KITTI, Calibration
 
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/140720011-db926cf3-411b-4f94-9c91-021b4e126126.png">
 
-<!-- not yet
+
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/140720351-54a41423-81cb-4296-aae6-45ab5d0f19af.png">
--->
+
 
 <!--
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/139518265-a099659a-ad4a-48e3-b690-1d33c752ce80.png">
@@ -45,10 +45,10 @@ Projection, KITTI, Calibration
 `Detail about Point Cloud Processing is in "https://github.com/ChicagoPark/Basic_LiDAR_Process"`
 
 ### [5-1] Point Cloud Segmentation
-<!-- Not Yet
+
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/140720438-2c94a03a-9e9e-4846-b0a9-91885eb31d6e.png">
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/140720451-9831c791-fb60-4252-a892-5421527276ad.png">
--->
+
 <!--
 previous
 <img width="600" alt="IMG" src="https://user-images.githubusercontent.com/73331241/140602154-6878050f-e89d-4f66-b3d2-486ce4ce931b.jpeg">
